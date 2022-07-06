@@ -14,20 +14,25 @@ class MailController extends Controller
     }
 
     public function sendmail(Request $request){
-        $id=$request->input('id');
-        $user= User::findOrFail($id);
-        $email= $user->email;
+       
         $text=$request->input('text');
+        $users=User::all();
+        
+        foreach($users as $user){
+        $email=$user->email;
         $array=[
             'name'=>$user->name,
             'surname'=>$user->surname,
             'text'=>$text
         ];
+
         mail::send('mailfront',$array,function ($message) use ($email){
             $message->subject('mail');
             $message->to($email);
         });
+    }
 
         return redirect()->route('users');
+        
     }
 }
